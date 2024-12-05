@@ -21,13 +21,24 @@ BIEN=IENtoBIEN(IEN, boundaryElementIDs, boundaryNodeLocalID);
 CMatrix=elasticProperties('youngsModulus',193e6,'poissonsRatio',0.253,'CPlaneStressEng');
 
 %% Matrix and vector assembly 
-numNodes=size(nodeCoords,1); %total number of nodes
-numDoFs=numNodes*2; %number of global degrees of freedom
+% ! REMOVE: Remove unused parameters
+% numNodes=size(nodeCoords,1); %total number of nodes
+% numDoFs=numNodes*2; %number of global degrees of freedom
+% !
+
 % Assemble stiffness matrix
-numGP=4; %number of Gauss points used in quadrature
+numGP=1; %number of Gauss points used in quadrature
 K = formStiffnessMatrixEng(nodeCoords, IEN, elementType, numGP, CMatrix);
-% Body force
-Fb = zeros(numDoFs,1);
+
+%define function handle for body force
+bodyForce=@(x)(repmat([0; 0],size(x,1))); 
+% assemble body force vector
+Fb = formBodyForceVector(nodeCoords, IEN, elementType, numGP, bodyForce);
+
+% ! REMOVE: Remove old body force
+% % Body force
+% Fb = zeros(numDoFs,1);
+% !
 
 % * ADD: Boundary conditions
 %define function handles for BC
@@ -70,11 +81,19 @@ F=Fb+Fs; %total load vector
 FF=F(freeDoF)-K(freeDoF,prescribedDoF)*u_prescribed(prescribedDoF);
 %define the free part of stiffness matrix
 KK=K(freeDoF,freeDoF);
-%solve linear equations
-u=zeros(numDoFs,1);
-u(freeDoF)=KK\FF;
-u(prescribedDoF)=u_prescribed(prescribedDoF);
 
+% * ADD: Solve linear equations
+u=zeros(size(u_prescribed)); %initialise vector of displacements
+%solve linear equations
+u(freeDoF)=KK\FF;
+% *
+
+% ! REMOVE: Remove old solution
+% %solve linear equations
+% u=zeros(numDoFs,1);
+% u(freeDoF)=KK\FF;
+% u(prescribedDoF)=u_prescribed(prescribedDoF);
+% !
 %% Stress recovery 
 u2=reshape(u,[2 numel(u)/2])'; %reshape s.t. Ux=u2(:,1), Uy=u2(:,2)
 %recover strains at centroids elements
@@ -99,4 +118,5 @@ factor=1e7; %scaling factor to amplify small deformations
 %draw deformed mesh
 drawElements(nodeCoords+u2*factor,IEN,elementType,s2(1,:)',.7);
 drawNodes(nodeCoords,BIEN{4},{'ks','filled'}); %draw pinned nodes
+drawNodes(nodeCoords,BIEN{2},{'ks','filled'}); %draw pinned nodes
 title('\sigma_x')

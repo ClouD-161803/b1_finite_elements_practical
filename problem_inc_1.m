@@ -31,7 +31,7 @@ numGP=1; %number of Gauss points used in quadrature
 K = formStiffnessMatrixEng(nodeCoords, IEN, elementType, numGP, CMatrix);
 
 %define function handle for body force
-bodyForce=@(x)(repmat([0; 0],size(x,1))); 
+bodyForce=@(x)(repmat([1; 0],size(x,1))); 
 % assemble body force vector
 Fb = formBodyForceVector(nodeCoords, IEN, elementType, numGP, bodyForce);
 
@@ -117,6 +117,8 @@ hold on;
 factor=1e7; %scaling factor to amplify small deformations
 %draw deformed mesh
 drawElements(nodeCoords+u2*factor,IEN,elementType,s2(1,:)',.7);
-drawNodes(nodeCoords,BIEN{4},{'ks','filled'}); %draw pinned nodes
-drawNodes(nodeCoords,BIEN{2},{'ks','filled'}); %draw pinned nodes
+% * ADD: Draw boundary conditions (pinned nodes)
+drawNodes(nodeCoords,BIEN{4},{'ks','filled'});
+drawNodes(nodeCoords,BIEN{2},{'ks','filled'});
+% *
 title('\sigma_x')

@@ -40,57 +40,32 @@
 %
 \paragraph{Introduction}
 This practical was concerned with applying Boundary Conditions (BCs) to \texttt{problem inc 1.m} for solving a plane stress equilibrium problem of a stretched bar.
-The investigation follows a structured approach: we first identified the formulation of the BCs in the codebase, modified it to specify Dirichlet BCs for the left and right edges of the bar, then verified the undeformed state. A final combined loading case was tested.
+The study follows a structured approach: we first identified the formulation of the BCs in the codebase, modified it to specify Dirichlet BCs for the left and right edges of the bar, then verified the undeformed state. A final combined loading case was finally tested.
+Horizontal stress $\sigma_x$ and plane strains are visualised, using a $10^7$ scaling factor to make small deflections visible.
+Values of $\sigma_x$, as well as those of all loads, deflections and scaling factors, have been chosen arbitrarily.
 
+\paragraph{Identification of BCs and Undeformed State}
+BCs are defined in the original codebase at lines 23-33 of \texttt{problem inc 1.m}. The code concatenates the left edges' degrees of freedom (DoFs) into the \texttt{prescribedDoF} array, which is initially fixed to provide zero displacements. This constitutes a Dirichlet boundary condition for the left edge, (note: no condition is initially imposed on the right edge). Force vectors $Fs$ and $Fb$ (which represent, respectively, applied and body forces) are both initialised to zero. This ensures the top and bottom edges are traction-free.
 
-
-
-
-
-with both a fixed stretch of the right edge and a distributed load acting upwards on the bottom edge.
+The undeformed state is then obtained by running the code, and is not included here due to lack of space.
 %
 \begin{figure}[h]
     \centering
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
-        \includegraphics[width=1\textwidth]{3D_rosenbrock.png}
-        \caption{3D - height map}
-        \label{fig:3Drosenbrock}
+        \includegraphics[width=1\textwidth]{Report/stretch.png}
+        \caption{Loading conditions: horizontal stretch of the right edge}
+        \label{fig:stretch}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{0.49\textwidth}
         \centering
-        \includegraphics[width=1\textwidth]{2D_rosenbrock.png}
-        \caption{2D - contours}
-        \label{fig:2Drosenbrock}
+        \includegraphics[width=1\textwidth]{Report/bending.png}
+        \caption{Loading conditions: stretch + upwards distributed force on the top edge}
+        \label{fig:bending}
     \end{subfigure}
-    \caption{Plots of Rosenbrock's Function}
+    \caption{Plots of deformed bar}
     \label{fig:functionPlots}
 \end{figure}
-%
-\paragraph{Tasks 2 \& 3 - Minimisation}
-We can easily compute the gradient and hessian of $f(x)$ as:
-\[
-\mathbf{g(\mathbf{x})} = \boldsymbol{\nabla} f(x, y) = 
-\begin{pmatrix}
--2(1 - x) - 400x(y - x^2), & 200(y - x^2)
-\end{pmatrix}^{T}
-\]
-\[
-\mathbf{H}(x, y) =
-\begin{bmatrix}
-1200x^2 - 400y + 2 & -400x \\
--400x & 200
-\end{bmatrix}
-\]
-\par We computed the convergence behaviour of a random point $\mathbf{x_0} \in \mathcal{D}$, where $\mathcal{D} = \{ (x, y) \in [-2, 2] \times [-2, 2] \}$, with the use of several methods (this was done using Python). In particular, we used Gradient Descent for \textbf{Figure~\ref{fig:gradientDescent}}, Newton's Method for \textbf{Figure~\ref{fig:newtonMethod}}, the Gauss-Newton for \textbf{Figure~\ref{fig:gaussNewton}} and the Nelder-Mead ``amoeba"" Simplex algorithm for \textbf{Figure~\ref{fig:nelderMead}} (the latter was accomplished through the use of the \texttt{scipy} library). See \textbf{Appendix~\ref{appendix:A}}.
-
-The second-order methods (Newton and Gauss-Newton) show the fastest convergence rate. They best fit this application, as computing the Hessian at every iteration is not computationally expensive. Quasi-Newton methods could be implemented to estimate otherwise expensive Hessians for higher-dimensional systems (e.g. BFGS).
-\par It should be noted that these methods are less robust than the first-order gradient descent, as they are more sensitive to how well the function is approximated by a quadratic around the initial location.
-\par The direct Nelder-Mead approach offers a competitive alternative as it does not require the computation of any derivatives. It should, therefore, be implemented in those cases where gradients and Hessians do not exist or are difficult to compute.
-%
-\appendix{} 
-% \newpage
-\section{Optimisation Plots} \label{appendix:A}
 %
 \end{document}

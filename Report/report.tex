@@ -1,0 +1,139 @@
+\documentclass[hidelinks]{article}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% START CUSTOM INCLUDES & DEFINITIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\usepackage{amsmath}
+\usepackage{parskip} %noident everywhere
+\usepackage{hyperref} % Show hyperlinks - claudio
+\hypersetup{
+    colorlinks = true
+    linkcolor = blue
+    urlcolor = red
+    }
+% Block diagrams
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, calc}
+\tikzstyle{block} = [rectangle, draw,
+    text centered, rounded corners, minimum height=3em, minimum width=6em]
+\tikzstyle{sum} = [draw, circle, node distance=1cm]
+\tikzstyle{input} = [coordinate]
+\tikzstyle{output} = [coordinate]
+\tikzstyle{arrow} = [draw, -latex']
+\usepackage[left=0.75in, right=0.75in, top=0.5in, bottom=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{titlesec}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END CUSTOM INCLUDES & DEFINITIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\pdfobjcompresslevel=0
+%
+\title{\vspace{-1cm} Optimisation Report}
+\author{\vspace{-2cm} Claudio Vestini}
+\date{}
+\begin{document}
+\maketitle
+%
+\paragraph{Task 1 - Rosenbrock's Function}
+In this practical, we were tasked with using optimisation approaches to minimise Rosenbrock's (non-convex) function:
+\[
+f(x, y) = (1 - x)^2 + 100(y - x^2)^2
+\]
+%
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{3D_rosenbrock.png}
+        \caption{3D - height map}
+        \label{fig:3Drosenbrock}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=1\textwidth]{2D_rosenbrock.png}
+        \caption{2D - contours}
+        \label{fig:2Drosenbrock}
+    \end{subfigure}
+    \caption{Plots of Rosenbrock's Function}
+    \label{fig:functionPlots}
+\end{figure}
+%
+\paragraph{Tasks 2 \& 3 - Minimisation}
+We can easily compute the gradient and hessian of $f(x)$ as:
+\[
+\mathbf{g(\mathbf{x})} = \boldsymbol{\nabla} f(x, y) = 
+\begin{pmatrix}
+-2(1 - x) - 400x(y - x^2), & 200(y - x^2)
+\end{pmatrix}^{T}
+\]
+\[
+\mathbf{H}(x, y) =
+\begin{bmatrix}
+1200x^2 - 400y + 2 & -400x \\
+-400x & 200
+\end{bmatrix}
+\]
+\par We computed the convergence behaviour of a random point $\mathbf{x_0} \in \mathcal{D}$, where $\mathcal{D} = \{ (x, y) \in [-2, 2] \times [-2, 2] \}$, with the use of several methods (this was done using Python). In particular, we used Gradient Descent for \textbf{Figure~\ref{fig:gradientDescent}}, Newton's Method for \textbf{Figure~\ref{fig:newtonMethod}}, the Gauss-Newton for \textbf{Figure~\ref{fig:gaussNewton}} and the Nelder-Mead ``amoeba"" Simplex algorithm for \textbf{Figure~\ref{fig:nelderMead}} (the latter was accomplished through the use of the \texttt{scipy} library). See \textbf{Appendix~\ref{appendix:A}}.
+
+The second-order methods (Newton and Gauss-Newton) show the fastest convergence rate. They best fit this application, as computing the Hessian at every iteration is not computationally expensive. Quasi-Newton methods could be implemented to estimate otherwise expensive Hessians for higher-dimensional systems (e.g. BFGS).
+\par It should be noted that these methods are less robust than the first-order gradient descent, as they are more sensitive to how well the function is approximated by a quadratic around the initial location.
+\par The direct Nelder-Mead approach offers a competitive alternative as it does not require the computation of any derivatives. It should, therefore, be implemented in those cases where gradients and Hessians do not exist or are difficult to compute.
+%
+\appendix{} 
+% \newpage
+\section{Optimisation Plots} \label{appendix:A}
+%
+\begin{figure}[h!]
+
+\centering
+\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 1).png}\hfill
+\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 2).png}\hfill
+\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 3).png}
+
+\caption{Gradient Descent Optimisation}
+\label{fig:gradientDescent}
+
+\end{figure}
+%
+\begin{figure}[h!]
+
+\centering
+\includegraphics[width=.333\textwidth]{Newton's Method (Run 1).png}\hfill
+\includegraphics[width=.333\textwidth]{Newton's Method (Run 2).png}\hfill
+\includegraphics[width=.333\textwidth]{Newton's Method (Run 3).png}
+
+\caption{Newton Method Optimisation}
+\label{fig:newtonMethod}
+
+\end{figure}
+%
+\begin{figure}[h!]
+
+\centering
+\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 1).png}\hfill
+\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 2).png}\hfill
+\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 3).png}
+
+\caption{Gauss-Newton Method Optimisation}
+\label{fig:gaussNewton}
+
+\end{figure}
+%
+\begin{figure}[h!]
+
+\centering
+\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 1).png}\hfill
+\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 2).png}\hfill
+\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 3).png}
+
+\caption{Nelder-Mead Simplex Algorithm Optimisation}
+\label{fig:nelderMead}
+
+\end{figure}
+%
+\end{document}

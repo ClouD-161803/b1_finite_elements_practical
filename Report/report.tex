@@ -48,6 +48,10 @@ Values of $\sigma_x$, as well as those of all loads, deflections and scaling fac
 BCs are defined in the original codebase at lines 23-33 of \texttt{problem inc 1.m}. The code concatenates the left edges' degrees of freedom (DoFs) into the \texttt{prescribedDoF} array, which is initially fixed to provide zero displacements. This constitutes a Dirichlet boundary condition for the left edge, (note: no condition is initially imposed on the right edge). Force vectors $Fs$ and $Fb$ (which represent, respectively, applied and body forces) are both initialised to zero. This ensures the top and bottom edges are traction-free.
 
 The undeformed state is then obtained by running the code, and is not included here due to lack of space.
+\paragraph{Modifying BCs}
+We were asked to implement a Dirichlet BC for the right edge of the bar, with an arbitrary fixed displacement. We obtained this by first including the relevant nodes for the right edge in the \texttt{prescribedDoF} array. We then specified a fixed horizontal displacement to the right edge by assigning an arbitrary value to \texttt{u prescribed(rightXDoF)} (the value itself is not relevant to the discussion), whilst also ensuring the vertical YDoF was set to zero. The result was the stretched bar of Figure~\ref{fig:stretch}.
+
+The second load case required combined stretch + bending (the details of how to obtained this were omitted from the problem statement). I implemented this load case by setting the balue of $Fs$ to a constant positive value (applying a distributed force acting upwards). The Dirichlet BCs were left unchanged from the previous part. The results are shown in Figure~\ref{fig:bending}.
 %
 \begin{figure}[h]
     \centering

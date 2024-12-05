@@ -30,10 +30,12 @@ CMatrix=elasticProperties('youngsModulus',193e6,'poissonsRatio',0.253,'CPlaneStr
 numGP=1; %number of Gauss points used in quadrature
 K = formStiffnessMatrixEng(nodeCoords, IEN, elementType, numGP, CMatrix);
 
+% * ADD: Define body force
 %define function handle for body force
-bodyForce=@(x)(repmat([1; 0],size(x,1))); 
+bodyForce=@(x)(repmat([0; 0],size(x,1))); 
 % assemble body force vector
 Fb = formBodyForceVector(nodeCoords, IEN, elementType, numGP, bodyForce);
+% *
 
 % ! REMOVE: Remove old body force
 % % Body force
@@ -50,7 +52,7 @@ bndTraction1=@(x)(repmat([1; 0],size(x,1)));  % non-zero traction
 %match the structure of BIEN 
 bndTractions={bndTraction0,bndTraction1,bndTraction0,bndTraction0};
 bndDisplacements=repmat({bndDisplacement},4,1); 
-isDirichlet=[0; 1; 0; 1]; %define which boundary regions have Dirichlet BC
+isDirichlet=[0; 0; 0; 1]; %define which boundary regions have Dirichlet BC
 
 numGP1d=1; %number of Gauss Points for 1d boundary elements
 % assemble boundary load vector for Neumann BC
@@ -59,6 +61,7 @@ numGP1d=1; %number of Gauss Points for 1d boundary elements
     formBC(nodeCoords,BIEN,elementType1d,numGP1d,...
     bndTractions,bndDisplacements,isDirichlet);
 % *
+% disp(Fs)
 
 % ! REMOVE: Remove old boundary conditions
 % % Boundary conditions

@@ -3,11 +3,16 @@
 clear; close all;
 %% Mesh generation
 elementType='2dQ1'; %define element type
+% * MODIFICATION: Define boundary element type
+elementType1d='1dQ1'; % consistent with elementType
+% *
 domain=[0 0 4 1]; %[x0 y0 x1 y1]
 numElements=[15 10]; %[numElX numElY]
 [nodeCoords, IEN, boundaryElementIDs, boundaryNodeLocalID]=...
     meshRect2d(domain,elementType,numElements); %generate the mesh
-
+% * MODIFICATION: Create boundary incidence arrays
+BIEN=IENtoBIEN(IEN, boundaryElementIDs, boundaryNodeLocalID);
+% *
 %% Parameters
 %elasticity tensor
 CMatrix=elasticProperties('youngsModulus',193e6,'poissonsRatio',0.253,'CPlaneStressEng');
@@ -53,8 +58,16 @@ u2=reshape(u,[2 numel(u)/2])'; %reshape s.t. Ux=u2(:,1), Uy=u2(:,2)
 %evaluate stresses at the centroids
 s2=CMatrix*strain;
 
-%% Visualisation 
-figure(1);clf; 
+%% Visualisation
+% * MODIFICATION: Draw the initial undeformed mesh
+figure(1);clf;
+drawElements(nodeCoords,IEN,elementType); % mesh
+hold on;
+drawNodes(nodeCoords); % nodes
+drawNodes(GPCoords,'x'); % Gauss points
+% *
+
+figure(2);clf; 
 %draw initial undeformed mesh
 drawElements(nodeCoords,IEN,elementType,0,0);
 hold on;

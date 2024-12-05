@@ -1,4 +1,5 @@
 %%%%% Original file for Problem 1 (incremental)
+
 clear; close all;
 %% Mesh generation
 elementType='2dQ1'; %define element type

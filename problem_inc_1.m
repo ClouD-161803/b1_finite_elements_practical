@@ -44,15 +44,17 @@ Fb = formBodyForceVector(nodeCoords, IEN, elementType, numGP, bodyForce);
 
 % * ADD: Boundary conditions
 %define function handles for BC
-bndDisplacement=@(x)(zeros(size(x))'); % zero displacement
+bndDisplacement0=@(x)(zeros(size(x))'); % zero displacement
+bndDisplacement1 =@(x)(repmat([1; 0],size(x,1))); % non-zero displacement
 bndTraction0=@(x)(zeros(size(x))'); % zero traction
-% Traction vector [1; 0] for the right boundary
-bndTraction1=@(x)(repmat([1; 0],size(x,1)));  % non-zero traction
+% Traction vector [0; 1] for the bottom boundary
+bndTraction1=@(x)(repmat([0; 1],size(x,1)));  % non-zero traction
 %make cell arrays of function handles - boundary condition cell arrays must
 %match the structure of BIEN 
-bndTractions={bndTraction0,bndTraction1,bndTraction0,bndTraction0};
-bndDisplacements=repmat({bndDisplacement},4,1); 
-isDirichlet=[0; 0; 0; 1]; %define which boundary regions have Dirichlet BC
+bndTractions={bndTraction0,bndTraction0,bndTraction0,bndTraction0};
+% bndDisplacements = {bndDisplacement0,bndDisplacement1,bndDisplacement0,bndDisplacement0};
+bndDisplacements=repmat({bndDisplacement0},4,1); 
+isDirichlet=[0; 1; 0; 1]; %define which boundary regions have Dirichlet BC
 
 numGP1d=1; %number of Gauss Points for 1d boundary elements
 % assemble boundary load vector for Neumann BC
@@ -120,8 +122,8 @@ hold on;
 factor=1e7; %scaling factor to amplify small deformations
 %draw deformed mesh
 drawElements(nodeCoords+u2*factor,IEN,elementType,s2(1,:)',.7);
-% * ADD: Draw boundary conditions (pinned nodes)
-drawNodes(nodeCoords,BIEN{4},{'ks','filled'});
-drawNodes(nodeCoords,BIEN{2},{'ks','filled'});
+% * ADD: Draw boundary conditions
+% drawNodes(nodeCoords,BIEN{4},{'ks','filled'});
+% drawNodes(nodeCoords,BIEN{2},{'ks','filled'});
 % *
 title('\sigma_x')

@@ -32,17 +32,22 @@
 %
 \pdfobjcompresslevel=0
 %
-\title{\vspace{-1cm} Optimisation Report}
+\title{\vspace{-1cm} Finite Elements Report}
 \author{\vspace{-2cm} Claudio Vestini}
 \date{}
 \begin{document}
 \maketitle
 %
-\paragraph{Task 1 - Rosenbrock's Function}
-In this practical, we were tasked with using optimisation approaches to minimise Rosenbrock's (non-convex) function:
-\[
-f(x, y) = (1 - x)^2 + 100(y - x^2)^2
-\]
+\paragraph{Introduction}
+This practical was concerned with applying Boundary Conditions (BCs) to \texttt{problem inc 1.m} for solving a plane stress equilibrium problem of a stretched bar.
+The investigation follows a structured approach: we first identified the formulation of the BCs in the codebase, modified it to specify Dirichlet BCs for the left and right edges of the bar, then verified the undeformed state. A final combined loading case was tested.
+
+
+
+
+
+
+with both a fixed stretch of the right edge and a distributed load acting upwards on the bottom edge.
 %
 \begin{figure}[h]
     \centering
@@ -87,53 +92,5 @@ The second-order methods (Newton and Gauss-Newton) show the fastest convergence 
 \appendix{} 
 % \newpage
 \section{Optimisation Plots} \label{appendix:A}
-%
-\begin{figure}[h!]
-
-\centering
-\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 1).png}\hfill
-\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 2).png}\hfill
-\includegraphics[width=.333\textwidth]{Gradient Descent Path (Run 3).png}
-
-\caption{Gradient Descent Optimisation}
-\label{fig:gradientDescent}
-
-\end{figure}
-%
-\begin{figure}[h!]
-
-\centering
-\includegraphics[width=.333\textwidth]{Newton's Method (Run 1).png}\hfill
-\includegraphics[width=.333\textwidth]{Newton's Method (Run 2).png}\hfill
-\includegraphics[width=.333\textwidth]{Newton's Method (Run 3).png}
-
-\caption{Newton Method Optimisation}
-\label{fig:newtonMethod}
-
-\end{figure}
-%
-\begin{figure}[h!]
-
-\centering
-\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 1).png}\hfill
-\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 2).png}\hfill
-\includegraphics[width=.333\textwidth]{Gauss-Newton Method Path (Run 3).png}
-
-\caption{Gauss-Newton Method Optimisation}
-\label{fig:gaussNewton}
-
-\end{figure}
-%
-\begin{figure}[h!]
-
-\centering
-\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 1).png}\hfill
-\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 2).png}\hfill
-\includegraphics[width=.333\textwidth]{Nelder-Mead Method (Run 3).png}
-
-\caption{Nelder-Mead Simplex Algorithm Optimisation}
-\label{fig:nelderMead}
-
-\end{figure}
 %
 \end{document}
